@@ -1,8 +1,22 @@
-import React from 'react';
+import React, {Fragment} from 'react';
+import {Helmet} from 'react-helmet';
+import {Header, Titulo, ContenedorHeader, ContenedorBotones} from '../elementos/Header';
 
 const GastosPorCategoria = () => {
   return ( 
-    <h1>Gastos por Categoria</h1>
+    <Fragment>
+			<Helmet>
+				<title>Gastos por Categoria</title>
+			</Helmet>
+
+			<Header>
+				<ContenedorHeader>
+					<Titulo>Gastos por Categoria</Titulo>					
+				</ContenedorHeader>
+			</Header>
+
+
+		</Fragment>
   );
 }
  
