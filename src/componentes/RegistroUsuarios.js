@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import {Helmet} from 'react-helmet';
 import styled from 'styled-components';
 
-import {Header, Titulo, ContenedorHeader, ContenedorBotones} from '../elementos/Header';
+import {Header, Titulo, ContenedorHeader} from '../elementos/Header';
 import {Formulario, Input, ContenedorBoton} from '../elementos/ElementosDeFormulario';
 import Boton from '../elementos/Boton';
 import {ReactComponent as SvgLogin} from '../images/registro.svg';

@@ -26,7 +26,7 @@ const Formulario = styled.form`
     input {
         width: 100%;
         text-align: center;
-        padding: 2.5rem 0;
+        padding: 1.7rem 0;
         font-family: 'Work Sans', sans-serif;
         &::placeholder {
             color: rgba(0,0,0,.2);
@@ -46,7 +46,7 @@ const Input = styled.input`
     outline: none;
  
     @media(max-width: 60rem){ /* 950px */
-        font-size: 2.2rem; /* 24px */
+        font-size: 1.3rem; /* 24px */
     }
 `;
  
