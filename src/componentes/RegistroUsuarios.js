@@ -8,6 +8,7 @@ import {Formulario, Input, ContenedorBoton} from '../elementos/ElementosDeFormul
 import Boton from '../elementos/Boton';
 import {ReactComponent as SvgLogin} from '../images/registro.svg';
 import {auth} from '../firebase/firebase.Config';
+import Alerta from '../elementos/Alerta';
 
 const Svg = styled(SvgLogin)`
   width: 100%;
@@ -23,6 +24,9 @@ const RegistroUsuarios = () => {
   const [correo, establecerCorreo] = useState('');
   const [password, establecerPassword] = useState('');
   const [passwordConfirm, establecerPasswordConfirm] = useState('');
+  // se definene los state para las alertas
+  const [estadoAlerta, cambiarEstadoAlerta] = useState(false);
+  const [alerta, cambiaraAlerta] = useState({});
 
   // FUNCIONES
   const handleChangeInputs = e => {
@@ -45,6 +49,10 @@ const RegistroUsuarios = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // nos aseguramos que la alerta esta desactivada(false) y que la alerta esta vacia
+    cambiarEstadoAlerta(false);
+    cambiaraAlerta({});
+
     /* TODO:
           validar que sea un correo
           validar que ese correo no este registrado
@@ -57,37 +65,51 @@ const RegistroUsuarios = () => {
     // console.log(expresionRegular.test(correo));
     if( !expresionRegular.test(correo) ){
       // si no hay un correo valido
-      console.log('Por favor ingresa un correo electronico valido');
+      // console.log('Por favor ingresa un correo electronico valido');
+      cambiarEstadoAlerta(true);
+      cambiaraAlerta({
+        tipo: 'error',
+        mensaje: 'Por favor ingresa un correo electronico valido'
+      });
       return;
     }
 
     // Se valida que ningun campo se quede vacio
     if( correo === '' || password === '' || passwordConfirm ==='' ){
-      console.log('Todos los datos son obligatorios');
+      // console.log('Todos los datos son obligatorios');
+      cambiarEstadoAlerta(true);
+      cambiaraAlerta({
+        tipo: 'error',
+        mensaje: 'Todos los datos son obligatorios'
+      });
       return;
     }
 
     // validamos que el password y passwordConfirm sean iguales
     if ( password !== passwordConfirm) {
-      console.log('Las contraseñas deben ser iguales');
+      // console.log('Las contraseñas deben ser iguales');
+      cambiarEstadoAlerta(true);
+      cambiaraAlerta({
+        tipo: 'error',
+        mensaje: 'Las contraseñas deben ser iguales'
+      });
       return;
     }
 
     // Paso todas las validaciones se procede a crear un usuario    
     try {
+        // Guardamos en firebase.auth al usuario
         await auth.createUserWithEmailAndPassword(correo, password);
-        console.log('El usuario se creo con exito');
-
-        // limpiamos los campos
-        establecerCorreo('');
-        establecerPassword('');
-        establecerPasswordConfirm('');
-
-        // redireccionamos al home ('/')
+        
+        // Ingres a la aplicación y redireccionamos al home ('/')
         history.push('/');
     } catch (error) {      
       // console.log(error.code);
       // console.log(error.message);
+
+      // camibiamos el mensaje
+      cambiarEstadoAlerta(true);
+
       let msg = '';     
       switch (error.code) {
         case 'auth/email-already-in-use':
@@ -104,7 +126,13 @@ const RegistroUsuarios = () => {
           msg = 'Hubo un error al intentar crear la cuenta.'
           break;
       }
-      console.log(msg);
+                  
+      cambiaraAlerta({
+        tipo: 'error',
+        mensaje: msg
+      });
+
+      return;
     }            
   }  // end - handleSubmit
 
@@ -154,7 +182,15 @@ const RegistroUsuarios = () => {
         </ContenedorBoton>
       </Formulario>
 
+      <Alerta 
+        tipo={alerta.tipo}
+        mensaje={alerta.mensaje}
+        estadoAlerta={estadoAlerta}
+        cambiarEstadoAlerta={cambiarEstadoAlerta}
+      />
+      
     </Fragment>
+
   );
 }
  
