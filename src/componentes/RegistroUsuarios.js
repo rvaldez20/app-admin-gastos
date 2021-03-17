@@ -1,11 +1,13 @@
 import React, {Fragment, useState} from 'react';
 import {Helmet} from 'react-helmet';
 import styled from 'styled-components';
+import {useHistory} from 'react-router-dom';
 
 import {Header, Titulo, ContenedorHeader} from '../elementos/Header';
 import {Formulario, Input, ContenedorBoton} from '../elementos/ElementosDeFormulario';
 import Boton from '../elementos/Boton';
 import {ReactComponent as SvgLogin} from '../images/registro.svg';
+import {auth} from '../firebase/firebase.Config';
 
 const Svg = styled(SvgLogin)`
   width: 100%;
@@ -14,6 +16,8 @@ const Svg = styled(SvgLogin)`
 `;
 
 const RegistroUsuarios = () => {
+  //definimos nuestro useHistory para redireccionar
+  const history = useHistory();
 
   // se define los state para cada input
   const [correo, establecerCorreo] = useState('');
@@ -36,9 +40,9 @@ const RegistroUsuarios = () => {
       default:
         break
     }
-  }
+  } // end -handleChangeInputs
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     /* TODO:
@@ -69,10 +73,40 @@ const RegistroUsuarios = () => {
       return;
     }
 
-    // Quiere decir que se han pasado todas las validaciones.
-    console.log('Registramos usuario');
+    // Paso todas las validaciones se procede a crear un usuario    
+    try {
+        await auth.createUserWithEmailAndPassword(correo, password);
+        console.log('El usuario se creo con exito');
 
-  }
+        // limpiamos los campos
+        establecerCorreo('');
+        establecerPassword('');
+        establecerPasswordConfirm('');
+
+        // redireccionamos al home ('/')
+        history.push('/');
+    } catch (error) {      
+      // console.log(error.code);
+      // console.log(error.message);
+      let msg = '';     
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          msg = 'Ya existe una cuenta con el correo electrónico proporcionado.'
+        break;
+        case 'auth/weak-password':
+          msg = 'La contraseña tiene que ser de al menos 6 caracteres.'
+        break;
+        case 'auth/invalid-email':
+          msg = 'El correo electrónico no es válido.'
+        break;
+      
+        default:
+          msg = 'Hubo un error al intentar crear la cuenta.'
+          break;
+      }
+      console.log(msg);
+    }            
+  }  // end - handleSubmit
 
   return ( 
     <Fragment>
