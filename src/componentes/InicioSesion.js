@@ -86,7 +86,6 @@ const InicioSesion = () => {
       
       // camibiamos el mensaje
       cambiarEstadoAlerta(true);
-
       // console.log(error);
 
       let msg = '';     
@@ -107,10 +106,8 @@ const InicioSesion = () => {
         tipo: 'error',
         mensaje: msg
       });
-
       return;
-
-      console.log(error);
+      // console.log(error);
     }
 
 
