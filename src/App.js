@@ -7,7 +7,7 @@ import Boton from './elementos/Boton';
 import BotonCerrarSesion from './elementos/BotonCerrarSesion';
 
 const App = () => {
-	return ( 		
+	return (
 		<Fragment>
 			<Helmet>
 				<title>Agregar Gasto</title>
