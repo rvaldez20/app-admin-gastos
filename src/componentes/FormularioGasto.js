@@ -10,6 +10,7 @@ import fromUnixTime from 'date-fns/fromUnixTime';
 import getUnixTime from 'date-fns/getUnixTime';
 import agregarGasto from '../firebase/agregarGasto';
 import {useAuth} from '../contextos/AuthContext';
+import Alerta from '../elementos/Alerta';
 
 const FormularioGasto = () => {
 
@@ -19,6 +20,9 @@ const FormularioGasto = () => {
    const [categoria, cambiarCategoria] = useState('hogar');
    // se definen el state para la fecha
    const [fecha, cambiarFecha] = useState(new Date());
+   // se definen los estados para las alertas
+   const [estadoAlerta, cambiarEstadoAlerta] = useState(false);
+   const [alerta, cambiarAlerta] = useState({});
 
    // obtenemos el AuthContext
    const {usuario} = useAuth();
@@ -42,15 +46,41 @@ const FormularioGasto = () => {
       let cantidadFloat = parseFloat(inputCantidad).toFixed(2);
       // console.log(cantidad);
 
-      // se formatea la fecha a milisegundos con la funcion de la liberia date-fns   
-      // console.log(inputDescripcion, inputCantidad, categoria, fecha);
-      agregarGasto({
-         categoria: categoria,
-         descripcion: inputDescripcion,
-         cantidad: cantidadFloat,
-         fecha: getUnixTime(fecha),
-         uidUsuario: usuario.uid
-      });      
+      // Se valida que no svayan campos vacios
+      if (inputDescripcion !== '' && inputCantidad !=='') {
+         if(cantidadFloat) {
+            // se formatea la fecha a milisegundos con la funcion de la liberia date-fns   
+            // console.log(inputDescripcion, inputCantidad, categoria, fecha);
+            agregarGasto({
+               categoria: categoria,
+               descripcion: inputDescripcion,
+               cantidad: cantidadFloat,
+               fecha: getUnixTime(fecha),
+               uidUsuario: usuario.uid
+            })
+            .then(() => {
+               // si todo es correcto se restablecen todos los estados
+               cambiarCategoria('hogar');
+               cambiarInputDescripcion('');
+               cambiarInputCantidad('');
+               cambiarFecha(new Date());
+
+               cambiarEstadoAlerta(true);
+               cambiarAlerta({tipo: 'exito', mensaje: 'El gasto fue agregado correctamente'})
+            })
+            .catch((error) => {
+               cambiarEstadoAlerta(true);
+               cambiarAlerta({tipo: 'error', mensaje: 'Error al guardar el gasto, intenta nuevamente'});
+               console.log(error);
+            }) 
+         } else {
+            cambiarEstadoAlerta(true);
+            cambiarAlerta({tipo: 'error', mensaje: 'El valor de la cantidad no es correcto'})
+         }
+      } else {
+         cambiarEstadoAlerta(true);
+         cambiarAlerta({tipo: 'error', mensaje: 'Por favor rellena todos los campos'});
+      }
    }
 
    return ( 
@@ -89,7 +119,13 @@ const FormularioGasto = () => {
                Agergar Gasto <IconoPlus />
             </Boton>
          </ContenedorBoton>
-
+         
+         <Alerta 
+            tipo={alerta.tipo}
+            mensaje={alerta.mensaje}
+            estadoAlerta={estadoAlerta}
+            cambiarEstadoAlerta={cambiarEstadoAlerta}
+         />
       </Formulario>
     );
 }
