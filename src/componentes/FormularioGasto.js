@@ -6,6 +6,10 @@ import Boton from '../elementos/Boton';
 import {ReactComponent as IconoPlus} from '../images/plus.svg';
 import SelectCategorias from './SelectCategorias';
 import DatePicker from './DatePicker';
+import fromUnixTime from 'date-fns/fromUnixTime';
+import getUnixTime from 'date-fns/getUnixTime';
+import agregarGasto from '../firebase/agregarGasto';
+import {useAuth} from '../contextos/AuthContext';
 
 const FormularioGasto = () => {
 
@@ -15,6 +19,10 @@ const FormularioGasto = () => {
    const [categoria, cambiarCategoria] = useState('hogar');
    // se definen el state para la fecha
    const [fecha, cambiarFecha] = useState(new Date());
+
+   // obtenemos el AuthContext
+   const {usuario} = useAuth();
+   // console.log(usuario.uid);
 
    // funcion para actualizar el state con lo que escribemn en los inputs
    const handleChange = (e) => {
@@ -26,10 +34,27 @@ const FormularioGasto = () => {
       }
    }
 
-   console.log(fecha);
+   // se crea la funcion para enviar los datos del formulario y guardar el gasto en firebase
+   const handleSubmit = (e) => {
+      e.preventDefault();
+      
+      // para convertir a float con 2 decimales la cantidad
+      let cantidadFloat = parseFloat(inputCantidad).toFixed(2);
+      // console.log(cantidad);
+
+      // se formatea la fecha a milisegundos con la funcion de la liberia date-fns   
+      // console.log(inputDescripcion, inputCantidad, categoria, fecha);
+      agregarGasto({
+         categoria: categoria,
+         descripcion: inputDescripcion,
+         cantidad: cantidadFloat,
+         fecha: getUnixTime(fecha),
+         uidUsuario: usuario.uid
+      });      
+   }
 
    return ( 
-      <Formulario>
+      <Formulario onSubmit={handleSubmit}>
          <ContenedorFiltros>
             <SelectCategorias 
                categoria={categoria}
