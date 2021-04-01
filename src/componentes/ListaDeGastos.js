@@ -3,6 +3,7 @@ import {Helmet} from 'react-helmet';
 
 import {Header, Titulo} from '../elementos/Header';
 import BtnRegresar from '../elementos/BtnRegresar';
+import BarraTotalGastado from './BarraTotalGastado';
 // import {AuthContext} from '../contextos/AuthContext';   // 1.-para usarlo sin hook
 // import {useAuth} from '../contextos/AuthContext';
 
@@ -26,6 +27,8 @@ const ListaDeGastos = () => {
         <BtnRegresar />
 				<Titulo>Lista de Gastos</Titulo>					
 			</Header>
+
+			<BarraTotalGastado />
 		</Fragment>
   );
 }
