@@ -4,6 +4,8 @@ import {Helmet} from 'react-helmet';
 import {Header, Titulo} from '../elementos/Header';
 import BtnRegresar from '../elementos/BtnRegresar';
 import BarraTotalGastado from './BarraTotalGastado';
+import useObtenerGastos from '../hooks/useObtenerGastos';
+
 // import {AuthContext} from '../contextos/AuthContext';   // 1.-para usarlo sin hook
 // import {useAuth} from '../contextos/AuthContext';
 
@@ -17,19 +19,24 @@ const ListaDeGastos = () => {
 	// const {usuario} = useAuth();
 	// console.log(usuario);
 
+	const [gastos] = useObtenerGastos();
+	console.log(gastos);
+
   return ( 
-    <Fragment>
-			<Helmet>
-				<title>Lista de Gastos</title>
-			</Helmet>
+	<Fragment>
+		<Helmet>
+			<title>Lista de Gastos</title>
+		</Helmet>
 
-			<Header>
-        <BtnRegresar />
-				<Titulo>Lista de Gastos</Titulo>					
-			</Header>
+		<Header>
+		<BtnRegresar />
+			<Titulo>Lista de Gastos</Titulo>
+		</Header>
 
-			<BarraTotalGastado />
-		</Fragment>
+		
+
+		<BarraTotalGastado />
+	</Fragment>
   );
 }
  
