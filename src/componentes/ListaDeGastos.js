@@ -27,6 +27,7 @@ import {ReactComponent as IconoBorrar} from '../images/borrar.svg';
 import Boton from '../elementos/Boton';
 import {format, fromUnixTime} from 'date-fns';
 import {es} from 'date-fns/locale';
+import borrarGasto from '../firebase/borrarGasto';
 
 // import {AuthContext} from '../contextos/AuthContext';   // 1.-para usarlo sin hook
 // import {useAuth} from '../contextos/AuthContext';
@@ -43,7 +44,7 @@ const ListaDeGastos = () => {
 
 	const [gastos, obtenerMasGastos, hayMasPorCargar] = useObtenerGastos();
 	// console.log(gastos);
-	console.log(hayMasPorCargar)
+	// console.log(hayMasPorCargar)
 
 	const formatearFecha = (fecha) => {
 		return format(fromUnixTime(fecha), "dd 'de' MMMM 'de' yyyy", {locale: es});
@@ -96,7 +97,7 @@ const ListaDeGastos = () => {
 								<BotonAccion as={Link} to={`/editar/${gasto.id}`}>
 									<IconoEditar />
 								</BotonAccion>
-								<BotonAccion>
+								<BotonAccion onClick={() => {borrarGasto(gasto.id)}}>
 									<IconoBorrar />
 								</BotonAccion>
 							</ContenedorBotones>
