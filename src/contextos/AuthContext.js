@@ -23,7 +23,7 @@ const AuthProvider = ({children}) => {
   useEffect( () => {
     // Comprobamos si hay un usurio cad avez que se inicia o cierra una sesión
     const cancelarSuscripcion = auth.onAuthStateChanged( (userCheckSign) => {
-      console.log(userCheckSign);
+      // console.log(userCheckSign);
       // si usuario retorna null quiere decir qu eno ha iniciado sesion
       // si regresa un objeto quiere decir que ya inicio sesion    
       
