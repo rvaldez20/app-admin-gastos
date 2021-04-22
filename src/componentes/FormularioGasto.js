@@ -1,18 +1,20 @@
-import React, {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {ContenedorFiltros, Formulario, 
         Input, InputGrande, ContenedorBoton
 } from '../elementos/ElementosDeFormulario';
+import {useHistory} from 'react-router-dom';
 import Boton from '../elementos/Boton';
 import {ReactComponent as IconoPlus} from '../images/plus.svg';
 import SelectCategorias from './SelectCategorias';
 import DatePicker from './DatePicker';
-// import fromUnixTime from 'date-fns/fromUnixTime';
+import fromUnixTime from 'date-fns/fromUnixTime';
 import getUnixTime from 'date-fns/getUnixTime';
 import agregarGasto from '../firebase/agregarGasto';
 import {useAuth} from '../contextos/AuthContext';
 import Alerta from '../elementos/Alerta';
+import editarGasto from '../firebase/editarGasto';
 
-const FormularioGasto = () => {
+const FormularioGasto = ({gasto}) => {
 
    // se define el state para categoria
    const [inputDescripcion, cambiarInputDescripcion] = useState('');
@@ -27,6 +29,28 @@ const FormularioGasto = () => {
    // obtenemos el AuthContext
    const {usuario} = useAuth();
    // console.log(usuario.uid);
+
+   const history = useHistory();
+
+   //con un useEffect para saber si se pas aun gasto, esto para saber si es new o se edita
+   useEffect(() =>{
+      // Comprobamos si se le paso un gasto
+      // De ser asi establecemos todo el state con los valores del gasto
+      if(gasto){
+         // Comprobamos que el gasto sea del usuario actual (logueado)
+         // Para eso comprobamos el uid guardado con el gasto del uid del usuario actual
+         if(gasto.data().uidUsuario === usuario.uid){
+            // quiere decir que el gasto es del usuario actual y se establecen los estados
+            cambiarCategoria(gasto.data().categoria);
+            cambiarFecha(fromUnixTime(gasto.data().fecha));
+            cambiarInputDescripcion(gasto.data().descripcion);
+            cambiarInputCantidad(gasto.data().cantidad);
+         } else {
+            history.push('/lista');
+         }
+      }
+
+   },[gasto, usuario, history])
 
    // funcion para actualizar el state con lo que escribemn en los inputs
    const handleChange = (e) => {
@@ -49,30 +73,47 @@ const FormularioGasto = () => {
       // Se valida que no svayan campos vacios
       if (inputDescripcion !== '' && inputCantidad !=='') {
          if(cantidadFloat) {
-            // se formatea la fecha a milisegundos con la funcion de la liberia date-fns   
-            // console.log(inputDescripcion, inputCantidad, categoria, fecha);
-            agregarGasto({
-               categoria: categoria,
-               descripcion: inputDescripcion,
-               cantidad: cantidadFloat,
-               fecha: getUnixTime(fecha),
-               uidUsuario: usuario.uid
-            })
-            .then(() => {
-               // si todo es correcto se restablecen todos los estados
-               cambiarCategoria('hogar');
-               cambiarInputDescripcion('');
-               cambiarInputCantidad('');
-               cambiarFecha(new Date());
 
-               cambiarEstadoAlerta(true);
-               cambiarAlerta({tipo: 'exito', mensaje: 'El gasto fue agregado correctamente'})
-            })
-            .catch((error) => {
-               cambiarEstadoAlerta(true);
-               cambiarAlerta({tipo: 'error', mensaje: 'Error al guardar el gasto, intenta nuevamente'});
-               console.log(error);
-            }) 
+            // si se tiene un gasto
+            if(gasto){
+               // console.log(gasto.data());
+               editarGasto({
+                  id: gasto.id,
+                  categoria: categoria,
+                  descripcion: inputDescripcion,
+                  cantidad: cantidadFloat,
+                  fecha: getUnixTime(fecha)
+               }).then(() =>{
+                  history.push('/lista');
+               }).catch((error) => {
+                  console.log(error)  
+               });
+            } else {
+               // se formatea la fecha a milisegundos con la funcion de la liberia date-fns   
+               // console.log(inputDescripcion, inputCantidad, categoria, fecha);
+               agregarGasto({
+                  categoria: categoria,
+                  descripcion: inputDescripcion,
+                  cantidad: cantidadFloat,
+                  fecha: getUnixTime(fecha),
+                  uidUsuario: usuario.uid
+               })
+               .then(() => {
+                  // si todo es correcto se restablecen todos los estados
+                  cambiarCategoria('hogar');
+                  cambiarInputDescripcion('');
+                  cambiarInputCantidad('');
+                  cambiarFecha(new Date());
+   
+                  cambiarEstadoAlerta(true);
+                  cambiarAlerta({tipo: 'exito', mensaje: 'El gasto fue agregado correctamente'})
+               })
+               .catch((error) => {
+                  cambiarEstadoAlerta(true);
+                  cambiarAlerta({tipo: 'error', mensaje: 'Error al guardar el gasto, intenta nuevamente'});
+                  console.log(error);
+               }) 
+            }
          } else {
             cambiarEstadoAlerta(true);
             cambiarAlerta({tipo: 'error', mensaje: 'El valor de la cantidad no es correcto'})
@@ -116,7 +157,7 @@ const FormularioGasto = () => {
          </div>
          <ContenedorBoton>
             <Boton as="button" primario conIcono type="submit">
-               Agergar Gasto <IconoPlus />
+               {gasto ? 'Editar Gasto' : 'Agregar Gasto'} <IconoPlus />
             </Boton>
          </ContenedorBoton>
          

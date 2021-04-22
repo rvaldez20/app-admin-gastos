@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {db} from '../firebase/firebase.Config';
 import {useHistory} from 'react-router-dom';
 
@@ -6,8 +6,7 @@ const useObtenerGasto = (id) => {
    const history = useHistory();
    
    // se definr el state para gasto
-   const [gasto, establecerGasto] = useState('');
-   console.log(gasto)
+   const [gasto, establecerGasto] = useState('');   
 
    // se define useEffect
    useEffect(() => {
@@ -17,7 +16,7 @@ const useObtenerGasto = (id) => {
             if(doc.exists){
                establecerGasto(doc);
             } else {
-               history.push('./lista');
+               history.push('/lista');
             }
          })
    },[history, id]);

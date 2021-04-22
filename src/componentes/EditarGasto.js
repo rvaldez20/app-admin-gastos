@@ -7,6 +7,8 @@ import BtnRegresar from '../elementos/BtnRegresar';
 import BarraTotalGastado from './BarraTotalGastado';
 import FormularioGasto from './FormularioGasto';
 import useObtenerGasto from '../hooks/useObtenerGasto';
+import editarGasto from '../firebase/editarGasto';
+
 
 const EditarGasto = () => {
 
@@ -15,7 +17,7 @@ const EditarGasto = () => {
 	// console.log(id)
 
 	const [gasto] = useObtenerGasto(id);
-	console.log(gasto)
+	// console.log(gasto);
 
 	return (
 		<Fragment>
@@ -24,11 +26,13 @@ const EditarGasto = () => {
 			</Helmet>
 
 			<Header>
-			<BtnRegresar />
+			<BtnRegresar ruta="/lista" />
 				<Titulo>Editar Gasto</Titulo>
 			</Header>
 
-			<FormularioGasto />
+			<FormularioGasto 
+				gasto={gasto}
+			/>
 
 			<BarraTotalGastado />
 		</Fragment>		
