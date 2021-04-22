@@ -6,21 +6,21 @@ import BtnRegresar from '../elementos/BtnRegresar';
 import BarraTotalGastado from './BarraTotalGastado';
 
 const GastosPorCategoria = () => {
-  return ( 
-    <Fragment>
+	return ( 
+		<Fragment>
 			<Helmet>
 				<title>Gastos por Categoria</title>
 			</Helmet>
 
 			<Header>
-        <BtnRegresar />
+			<BtnRegresar />
 				<Titulo>Gastos por Categoria</Titulo>					
 			</Header>
 
 			<BarraTotalGastado />
 
 		</Fragment>
-  );
+	);
 }
  
 export default GastosPorCategoria;
