@@ -5,7 +5,14 @@ import {Header, Titulo} from '../elementos/Header';
 import BtnRegresar from '../elementos/BtnRegresar';
 import BarraTotalGastado from './BarraTotalGastado';
 
+// for test
+// import useObtenerGastosDelMes from '../hooks/useObtenerGastosDelMes';
+
 const GastosPorCategoria = () => {
+
+	// for tests
+	// useObtenerGastosDelMes();
+
 	return ( 
 		<Fragment>
 			<Helmet>

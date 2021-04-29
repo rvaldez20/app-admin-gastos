@@ -7,7 +7,7 @@ import BtnRegresar from '../elementos/BtnRegresar';
 import BarraTotalGastado from './BarraTotalGastado';
 import FormularioGasto from './FormularioGasto';
 import useObtenerGasto from '../hooks/useObtenerGasto';
-import editarGasto from '../firebase/editarGasto';
+// import editarGasto from '../firebase/editarGasto';
 
 
 const EditarGasto = () => {
