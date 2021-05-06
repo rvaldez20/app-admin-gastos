@@ -6,13 +6,16 @@ import BtnRegresar from '../elementos/BtnRegresar';
 import BarraTotalGastado from './BarraTotalGastado';
 
 import useObtenerGastosDelMesPorCategoria from '../hooks/useObtenerGastosDelMesPorCategoria';
+import {	ListaDeCategorias, ElementoListaCategorias, Categoria, Valor} from '../elementos/ElementosDeLista';
+import IconoCategoria from '../elementos/IconoCategoria';
+import convertirAMoneda from '../funciones/convertirAMoneda';
 
 // for test
 // import useObtenerGastosDelMes from '../hooks/useObtenerGastosDelMes';
 
 const GastosPorCategoria = () => {
-	const gastos = useObtenerGastosDelMesPorCategoria();
-	console.log(gastos);
+	const gastosXcategoria = useObtenerGastosDelMesPorCategoria();
+	console.log(gastosXcategoria);
 
 
 	// for tests
@@ -28,6 +31,20 @@ const GastosPorCategoria = () => {
 			<BtnRegresar />
 				<Titulo>Gastos por Categoria</Titulo>
 			</Header>
+
+			<ListaDeCategorias>
+				{gastosXcategoria.map((elemento, index) => {
+					return (
+						<ElementoListaCategorias key={index}>
+							<Categoria>
+								<IconoCategoria nombreCategoria={elemento.categoria} />
+								{elemento.categoria}
+							</Categoria>
+							<Valor>{convertirAMoneda(elemento.cantidad)}</Valor>
+						</ElementoListaCategorias>
+					);
+				})}
+			</ListaDeCategorias>
 
 			<BarraTotalGastado />
 
