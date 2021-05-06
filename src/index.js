@@ -21,6 +21,7 @@ import RegistroUsuarios from './componentes/RegistroUsuarios';
 import Fondo from './elementos/Fondo';
 import { AuthProvider } from './contextos/AuthContext';
 import RutaPrivada from './componentes/RutaPrivada';
+import {TotalGastadoProvider} from './contextos/TotalGastadoEnElMesContext';
 
 
 
@@ -41,45 +42,47 @@ const Index = () => {
 			</Helmet>
 
 			<AuthProvider>
-				<BrowserRouter>
-					<Contenedor>
-						<Switch>
-							{/* Rutas Publicas */}
-							<Route path="/iniciar-sesion" component={InicioSesion} />
-							<Route path="/crear-cuenta" component={RegistroUsuarios} />
-							
-							{/* 
-								---------------Rutas Privadas
-								Se protegen las rutas verificando si tiene sesion iniciada y si no
-								lo redirige a iniciar sesión.
-								En el componente RutaPrivada se le psa el componente con todas sus
-								propiedades.
-							*/}
-							<RutaPrivada path="/categorias">
-								<GastosPorCategoria />
-							</RutaPrivada>
+				<TotalGastadoProvider>
+					<BrowserRouter>
+						<Contenedor>
+							<Switch>
+								{/* Rutas Publicas */}
+								<Route path="/iniciar-sesion" component={InicioSesion} />
+								<Route path="/crear-cuenta" component={RegistroUsuarios} />
+								
+								{/* 
+									---------------Rutas Privadas
+									Se protegen las rutas verificando si tiene sesion iniciada y si no
+									lo redirige a iniciar sesión.
+									En el componente RutaPrivada se le psa el componente con todas sus
+									propiedades.
+								*/}
+								<RutaPrivada path="/categorias">
+									<GastosPorCategoria />
+								</RutaPrivada>
 
-							<RutaPrivada path="/lista">
-								<ListaDeGastos />
-							</RutaPrivada>
+								<RutaPrivada path="/lista">
+									<ListaDeGastos />
+								</RutaPrivada>
 
-							<RutaPrivada path="/editar/:id">
-								<EditarGasto />
-							</RutaPrivada>
+								<RutaPrivada path="/editar/:id">
+									<EditarGasto />
+								</RutaPrivada>
 
-							<RutaPrivada path="/">
-								<App />
-							</RutaPrivada>
-							
-							{/*
-							<Route path="/categorias" component={GastosPorCategoria} />
-							<Route path="/lista" component={ListaDeGastos} />
-							<Route path="/editar/:id" component={EditarGasto} />
-							<Route path="/" component={App} />
-							*/}
-						</Switch>
-					</Contenedor>
-				</BrowserRouter>			
+								<RutaPrivada path="/">
+									<App />
+								</RutaPrivada>
+								
+								{/*
+								<Route path="/categorias" component={GastosPorCategoria} />
+								<Route path="/lista" component={ListaDeGastos} />
+								<Route path="/editar/:id" component={EditarGasto} />
+								<Route path="/" component={App} />
+								*/}
+							</Switch>
+						</Contenedor>
+					</BrowserRouter>			
+				</TotalGastadoProvider>
 			</AuthProvider>
 
 			<Fondo />

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import theme from '../theme';
 
 import convertirAMoneda from '../funciones/convertirAMoneda';
+import {useTotalDelMes} from '../contextos/TotalGastadoEnElMesContext';
 
 const BarraTotal = styled.div`
     background: ${theme.verde};
@@ -23,11 +24,15 @@ const BarraTotal = styled.div`
 `;
 
 const BarraTotalGastado = () => {
-   return (
-      <BarraTotal>
-         <p>Total gastado en el mes</p>
-         <p>{convertirAMoneda(0.00)}</p>
-      </BarraTotal>
+
+    const {total} = useTotalDelMes();
+    // console.log(total)
+
+    return (
+        <BarraTotal>
+            <p>Total gastado en el mes</p>
+            <p>{convertirAMoneda(total)}</p>
+        </BarraTotal>
     );
 }
  

@@ -21,7 +21,7 @@ const GastosPorCategoria = () => {
 
 			<Header>
 			<BtnRegresar />
-				<Titulo>Gastos por Categoria</Titulo>					
+				<Titulo>Gastos por Categoria</Titulo>
 			</Header>
 
 			<BarraTotalGastado />
