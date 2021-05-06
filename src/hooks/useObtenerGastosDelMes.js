@@ -19,7 +19,7 @@ const useObtenerGastosDelMes = () => {
 
       // verificamos si hay un usuario logueado
       if(usuario) {
-         console.log(usuario);
+         // console.log(usuario);
          // se obtiene los gatos del mes actual
          const unsuscribe = db.collection('gastos')
          .orderBy('fecha', 'desc')
